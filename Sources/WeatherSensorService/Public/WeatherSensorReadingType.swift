@@ -14,7 +14,7 @@ public protocol WeatherSensorReadingType: CustomStringConvertible {
     /// Percent humidity
     var humidity: Double { get }
 
-    /// Barometric pressure  in kiloPascals
+    /// Barometric pressure in kiloPascals
     var pressure: Double { get }
 
     /// Reading timestamp
