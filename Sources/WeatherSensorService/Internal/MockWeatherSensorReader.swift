@@ -9,11 +9,7 @@ import Combine
 import Foundation
 
 private enum Constants {
-<<<<<<< HEAD
     static let readerInterval: UInt = 1
-=======
-    static let readerInterval: TimeInterval = 1
->>>>>>> main
     static let temperatureRange = -40.0...40.0
     static let humidityRange = 0.0...100.0
     static let pressureRange = 95.0...105.0
@@ -39,12 +35,8 @@ class MockWeatherSensorReader: WeatherSensorReaderType {
         sensorReadingsSubject.eraseToAnyPublisher()
     }
 
-<<<<<<< HEAD
     func set(readingInterval: UInt) {
         guard 1...UInt.max ~= readingInterval else { return }
-=======
-    func set(readingInterval: TimeInterval) {
->>>>>>> main
         readerInterval = readingInterval
     }
 
@@ -52,11 +44,7 @@ class MockWeatherSensorReader: WeatherSensorReaderType {
         stopSensorReadings()
 
         timer = Timer.scheduledTimer(
-<<<<<<< HEAD
             withTimeInterval: TimeInterval(readerInterval),
-=======
-            withTimeInterval: readerInterval,
->>>>>>> main
             repeats: true
         ) { [weak self] _ in
             guard let self = self else { return }
