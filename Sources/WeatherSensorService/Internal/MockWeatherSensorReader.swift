@@ -43,12 +43,15 @@ class MockWeatherSensorReader: WeatherSensorReaderType {
     func startSensorReadings() {
         stopSensorReadings()
 
+        // Report the first reading immediately, then start the timer
+        reportSensorReadings()
+
         timer = Timer.scheduledTimer(
             withTimeInterval: TimeInterval(readerInterval),
             repeats: true
         ) { [weak self] _ in
             guard let self = self else { return }
-            self.sensorReadingsSubject.send(self.generateSensorReadings())
+            self.reportSensorReadings()
         }
     }
 
@@ -57,12 +60,14 @@ class MockWeatherSensorReader: WeatherSensorReaderType {
         timer = nil
     }
 
-    private func generateSensorReadings() -> WeatherSensorReading {
-        WeatherSensorReading(
-            temperature: Double.random(in: Constants.temperatureRange),
-            humidity: Double.random(in: Constants.humidityRange),
-            pressure: Double.random(in: Constants.pressureRange),
-            time: Date()
+    private func reportSensorReadings() {
+        sensorReadingsSubject.send(
+            WeatherSensorReading(
+                temperature: Double.random(in: Constants.temperatureRange),
+                humidity: Double.random(in: Constants.humidityRange),
+                pressure: Double.random(in: Constants.pressureRange),
+                time: Date()
+            )
         )
     }
 }
