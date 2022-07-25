@@ -26,6 +26,19 @@ extension DateFormatter {
 }
 
 extension Double {
-    fileprivate var toStringTwoDecimalPlaces: String { String(format: "%.2f", self) }
-    fileprivate var toStringFourDecimalPlaces: String { String(format: "%.4f", self) }
+    public var toStringTwoDecimalPlaces: String { String(format: "%.2f", self) }
+    public var toStringFourDecimalPlaces: String { String(format: "%.4f", self) }
+}
+
+extension ClosedRange where Bound == Double {
+    func calculateSineWaveReading(cyclePercentage: Double) -> Double {
+        // Will be between -1 and 1 with the value determined based on the completion value of cyclePercentage
+        let coefficient = sin(2 * Double.pi * cyclePercentage)
+
+        // Median of the amplitude
+        let median = abs(upperBound-lowerBound) / 2
+
+        // Applies the coefficient and median amplitude to create a sin wave based around the range provided
+        return lowerBound + median + (coefficient * median)
+    }
 }

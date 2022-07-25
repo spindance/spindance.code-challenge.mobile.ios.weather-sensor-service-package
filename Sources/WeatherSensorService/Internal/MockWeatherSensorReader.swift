@@ -18,6 +18,8 @@ private enum Constants {
 class MockWeatherSensorReader: WeatherSensorReaderType {
     private var timer: Timer?
 
+    private var waveLocation: Double = 0
+
     private(set) var readerInterval = Constants.readerInterval {
         didSet {
             guard oldValue != readerInterval else { return }
@@ -61,13 +63,18 @@ class MockWeatherSensorReader: WeatherSensorReaderType {
     }
 
     private func reportSensorReadings() {
+        let wavePercentage = waveLocation/100.00
         sensorReadingsSubject.send(
             WeatherSensorReading(
-                temperature: Double.random(in: Constants.temperatureRange),
-                humidity: Double.random(in: Constants.humidityRange),
-                pressure: Double.random(in: Constants.pressureRange),
+                temperature: Constants.temperatureRange.calculateSineWaveReading(cyclePercentage: wavePercentage),
+                humidity: Constants.humidityRange.calculateSineWaveReading(cyclePercentage: wavePercentage),
+                pressure: Constants.pressureRange.calculateSineWaveReading(cyclePercentage: wavePercentage),
                 time: Date()
             )
         )
+        waveLocation = waveLocation + 1
+        if (waveLocation == 101) {
+            waveLocation = 0
+        }
     }
 }
