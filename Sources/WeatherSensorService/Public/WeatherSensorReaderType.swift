@@ -13,6 +13,7 @@ public protocol WeatherSensorReaderType {
     var readerInterval: UInt { get }
 
     /// Publishes ``WeatherSensorReadingType`` every ``readerInterval`` seconds
+    @available(iOS 13.0, *)
     var sensorReadingsPublisher: AnyPublisher<WeatherSensorReadingType, Never> { get }
 
     /// Sets readerInterval; must be greater than 0

@@ -4,7 +4,6 @@
 //
 // Copyright © 2022 SpinDance. All rights reserved.
 //
-
 import Combine
 import Foundation
 
@@ -15,6 +14,7 @@ private enum Constants {
     static let pressureRange = 95.0...105.0
 }
 
+@available(iOS 13.0, *)
 class MockWeatherSensorReader: WeatherSensorReaderType {
     private var timer: Timer?
 
@@ -32,7 +32,7 @@ class MockWeatherSensorReader: WeatherSensorReaderType {
     }
 
     private let sensorReadingsSubject = PassthroughSubject<WeatherSensorReadingType, Never>()
-
+    
     var sensorReadingsPublisher: AnyPublisher<WeatherSensorReadingType, Never> {
         sensorReadingsSubject.eraseToAnyPublisher()
     }
@@ -46,14 +46,17 @@ class MockWeatherSensorReader: WeatherSensorReaderType {
         stopSensorReadings()
 
         // Report the first reading immediately, then start the timer
-        reportSensorReadings()
-
-        timer = Timer.scheduledTimer(
-            withTimeInterval: TimeInterval(readerInterval),
-            repeats: true
-        ) { [weak self] _ in
+        DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             self.reportSensorReadings()
+            self.timer = Timer.scheduledTimer(
+                withTimeInterval: TimeInterval(self.readerInterval),
+                repeats: true
+            ) { [weak self] _ in
+                guard let self = self else { return }
+                print("reporting")
+                self.reportSensorReadings()
+            }
         }
     }
 

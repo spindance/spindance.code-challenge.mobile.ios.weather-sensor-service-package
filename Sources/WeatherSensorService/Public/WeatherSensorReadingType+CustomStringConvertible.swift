@@ -26,8 +26,8 @@ extension DateFormatter {
 }
 
 extension Double {
-    public var toStringTwoDecimalPlaces: String { String(format: "%.2f", self) }
-    public var toStringFourDecimalPlaces: String { String(format: "%.4f", self) }
+    fileprivate var toStringTwoDecimalPlaces: String { String(format: "%.2f", self) }
+    fileprivate var toStringFourDecimalPlaces: String { String(format: "%.4f", self) }
 }
 
 extension ClosedRange where Bound == Double {
