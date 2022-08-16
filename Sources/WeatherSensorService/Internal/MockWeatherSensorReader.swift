@@ -4,6 +4,7 @@
 //
 // Copyright © 2022 SpinDance. All rights reserved.
 //
+
 import Combine
 import Foundation
 
@@ -54,7 +55,6 @@ class MockWeatherSensorReader: WeatherSensorReaderType {
                 repeats: true
             ) { [weak self] _ in
                 guard let self = self else { return }
-                print("reporting")
                 self.reportSensorReadings()
             }
         }
