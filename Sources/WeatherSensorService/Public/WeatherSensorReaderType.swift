@@ -9,19 +9,19 @@ import Combine
 import Foundation
 
 public protocol WeatherSensorReaderType {
-    /// The time interval in seconds at which weather sensor readings are published
-    var readerInterval: UInt { get }
+  /// The time interval in seconds at which weather sensor readings are published
+  var readerInterval: UInt { get }
 
-    /// Publishes ``WeatherSensorReadingType`` every ``readerInterval`` seconds
-    @available(iOS 13.0, *)
-    var sensorReadingsPublisher: AnyPublisher<WeatherSensorReadingType, Never> { get }
+  /// Publishes ``WeatherSensorReadingType`` every ``readerInterval`` seconds
+  @available(iOS 13.0, *)
+  var sensorReadingsPublisher: AnyPublisher<WeatherSensorReadingType, Never> { get }
 
-    /// Sets readerInterval; must be greater than 0
-    func set(readingInterval: UInt)
+  /// Sets readerInterval; must be greater than 0
+  func set(readingInterval: UInt)
 
-    /// Starts the indefinite generation of weather sensor readings
-    func startSensorReadings()
+  /// Starts the indefinite generation of weather sensor readings
+  func startSensorReadings()
 
-    /// Stop the generation of weather sensor readings
-    func stopSensorReadings()
+  /// Stop the generation of weather sensor readings
+  func stopSensorReadings()
 }
