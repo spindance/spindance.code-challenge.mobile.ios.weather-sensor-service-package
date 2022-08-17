@@ -6,6 +6,7 @@ let package = Package(
     name: "WeatherSensorService",
     platforms: [
         .iOS(.v14),
+        .macOS(.v10_15)
     ],
     products: [
         .library(

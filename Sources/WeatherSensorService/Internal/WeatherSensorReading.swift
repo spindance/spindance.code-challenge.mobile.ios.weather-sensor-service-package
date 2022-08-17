@@ -8,8 +8,8 @@
 import Foundation
 
 struct WeatherSensorReading: WeatherSensorReadingType {
-    let temperature: Double
-    let humidity: Double
-    let pressure: Double
-    let time: Date
+  let temperature: Double
+  let humidity: Double
+  let pressure: Double
+  let time: Date
 }

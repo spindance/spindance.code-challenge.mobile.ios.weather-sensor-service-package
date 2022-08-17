@@ -8,15 +8,15 @@
 import Foundation
 
 public protocol WeatherSensorReadingType: CustomStringConvertible {
-    /// Temperature in degrees Celcius
-    var temperature: Double { get }
+  /// Temperature in degrees Celcius
+  var temperature: Double { get }
 
-    /// Percent humidity
-    var humidity: Double { get }
+  /// Percent humidity
+  var humidity: Double { get }
 
-    /// Barometric pressure in kiloPascals
-    var pressure: Double { get }
+  /// Barometric pressure in kiloPascals
+  var pressure: Double { get }
 
-    /// Reading timestamp
-    var time: Date { get }
+  /// Reading timestamp
+  var time: Date { get }
 }

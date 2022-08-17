@@ -15,59 +15,68 @@ private enum Constants {
     static let pressureRange = 95.0...105.0
 }
 
+@available(iOS 13.0, *)
 class MockWeatherSensorReader: WeatherSensorReaderType {
-    private var timer: Timer?
+  private var timer: Timer?
 
-    private(set) var readerInterval = Constants.readerInterval {
-        didSet {
-            guard oldValue != readerInterval else { return }
+  private var waveLocation: Double = 0
 
-            // If we were reporting, restart.
-            if timer != nil {
-                startSensorReadings()
-            }
-        }
-    }
+  private(set) var readerInterval = Constants.readerInterval {
+      didSet {
+          guard oldValue != readerInterval else { return }
+          // If we were reporting, restart.
+          if timer != nil {
+              startSensorReadings()
+          }
+      }
+  }
 
-    private let sensorReadingsSubject = PassthroughSubject<WeatherSensorReadingType, Never>()
+  private let sensorReadingsSubject = PassthroughSubject<WeatherSensorReadingType, Never>()
+  
+  var sensorReadingsPublisher: AnyPublisher<WeatherSensorReadingType, Never> {
+    sensorReadingsSubject.eraseToAnyPublisher()
+  }
 
-    var sensorReadingsPublisher: AnyPublisher<WeatherSensorReadingType, Never> {
-        sensorReadingsSubject.eraseToAnyPublisher()
-    }
+  func set(readingInterval: UInt) {
+      guard 1...UInt.max ~= readingInterval else { return }
+      readerInterval = readingInterval
+  }
 
-    func set(readingInterval: UInt) {
-        guard 1...UInt.max ~= readingInterval else { return }
-        readerInterval = readingInterval
-    }
+  func startSensorReadings() {
+      stopSensorReadings()
 
-    func startSensorReadings() {
-        stopSensorReadings()
+      // Report the first reading immediately, then start the timer
+      DispatchQueue.main.async { [weak self] in
+          guard let self = self else { return }
+          self.reportSensorReadings()
+          self.timer = Timer.scheduledTimer(
+              withTimeInterval: TimeInterval(self.readerInterval),
+              repeats: true
+          ) { [weak self] _ in
+               guard let self = self else { return }
+              self.reportSensorReadings()
+          }
+      }
+  }
 
-        // Report the first reading immediately, then start the timer
-        reportSensorReadings()
+  func stopSensorReadings() {
+      timer?.invalidate()
+      timer = nil
+  }
 
-        timer = Timer.scheduledTimer(
-            withTimeInterval: TimeInterval(readerInterval),
-            repeats: true
-        ) { [weak self] _ in
-            guard let self = self else { return }
-            self.reportSensorReadings()
-        }
-    }
-
-    func stopSensorReadings() {
-        timer?.invalidate()
-        timer = nil
-    }
-
-    private func reportSensorReadings() {
-        sensorReadingsSubject.send(
-            WeatherSensorReading(
-                temperature: Double.random(in: Constants.temperatureRange),
-                humidity: Double.random(in: Constants.humidityRange),
-                pressure: Double.random(in: Constants.pressureRange),
-                time: Date()
-            )
-        )
-    }
+  private func reportSensorReadings() {
+      let wavePercentage = waveLocation/100.00
+      sensorReadingsSubject.send(
+          WeatherSensorReading(
+              temperature: Constants.temperatureRange.calculateSineWaveReading(cyclePercentage: wavePercentage),
+              humidity: Constants.humidityRange.calculateSineWaveReading(cyclePercentage: wavePercentage),
+              pressure: Constants.pressureRange.calculateSineWaveReading(cyclePercentage: wavePercentage),
+              time: Date()
+          )
+      )
+      waveLocation = waveLocation + 1
+      if (waveLocation == 101) {
+          waveLocation = 0
+      }
+  }
 }
